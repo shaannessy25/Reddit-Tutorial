@@ -9,4 +9,13 @@ module.exports = app => {
             return res.redirect(`/`);
         })
     });
+    app.get("/", (req, res) => {
+        Post.find({})
+        .then(posts => {
+            res.render("posts-index", {posts});
+        })
+        .catch(err => {
+            console.log('error', err.message);
+        });
+    });
 };
