@@ -15,8 +15,8 @@ app.use(expressValidator());
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
+//requirements
 require('./controllers/posts')(app);
-// Set db
 require('./data/reddit-db');
 
 
