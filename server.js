@@ -15,20 +15,25 @@ app.use(
   })
 );
 
-// Add after body parser initialization!
-app.use(expressValidator());
-
+// Handlebars
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
+
+app.use(expressValidator());
+
+
+
+//Controllers
+require("./controllers/posts")(app);
+require('./controllers/comments')(app);
 // set db
 require("./data/reddit-db");
 
 // app.get('/', (req, res) => res.render('posts-index'))
 app.get("/posts/new", (req, res) => res.render("posts-new"));
 
-//Controllers
-require("./controllers/posts")(app);
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 module.exports = app;
