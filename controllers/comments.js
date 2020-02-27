@@ -12,7 +12,6 @@ module.exports = function(app) {
         comment.author = req.user._id;
 
         console.log('///////')
-        console.log(comment)
 
         // SAVE INSTANCE OF Comment MODEL TO DB
         comment
@@ -24,7 +23,6 @@ module.exports = function(app) {
             })
             .then(post => {
                 post.comments.unshift(comment);
-                console.log(comment)
                 return post.save();
 
             })
