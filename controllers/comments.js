@@ -8,18 +8,20 @@ module.exports = function(app) {
     app.post("/posts/:postId/comments", function(req, res) {
         // INSTANTIATE INSTANCE OF MODEL
         const comment = new Comment(req.body);
-
         comment.author = req.user._id;
-
-        console.log('///////')
-
         // SAVE INSTANCE OF Comment MODEL TO DB
         comment
-
             .save()
             .then(comment => {
-                console.log(req.params.postId)
-                return Post.findById(req.params.postId);
+                return Promise.all([
+                    Post.findById(req.params.postId)
+                ]);
+            })
+            .then(([post, user]) => {
+                post.comments.unshift(comment);
+                return Promise.all([
+                  post.save()
+                ]);
             })
             .then(post => {
                 post.comments.unshift(comment);
@@ -27,8 +29,7 @@ module.exports = function(app) {
 
             })
             .then(post => {
-                res.redirect(`/`);
-                // res.redirect(`/posts/${post._id}`);
+                res.redirect(`/posts/${req.params.postId}`);
             })
             .catch(err => {
                 console.log(err);
