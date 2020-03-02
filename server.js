@@ -67,7 +67,7 @@ require('./controllers/auth.js')(app);
 require('./controllers/replies.js')(app);
 // Start Server
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     console.log('Reddit listening on port localhost:3000!');
 });
 
