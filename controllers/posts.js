@@ -37,7 +37,6 @@ module.exports = (app) => {
     // INDEX
     app.get('/', (req, res) => {
         const currentUser = req.user;
-        console.log(req.cookies);
         Post.find().populate('author')
             .then(posts => {
                 res.render('posts-index', { posts, currentUser });
