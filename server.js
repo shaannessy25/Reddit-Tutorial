@@ -19,7 +19,7 @@ const expressValidator = require('express-validator');
 app.use(expressValidator());
 
 app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+app.set('view engine', 'handlebars')
 
 
 
@@ -27,6 +27,7 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(express.static('public'));
 // Set db
 require('./data/reddit-db');
 
