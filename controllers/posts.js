@@ -15,13 +15,10 @@ module.exports = (app) => {
             post
                 .save()
                 .then(post => {
-                    console.log(`The post: ${post}`)
                     return User.findById(post.author);
                 })
                 .then(user => {
-                    console.log(`The user: ${user}`)
                     user.posts.unshift(post);
-                    console.log(`The array: ${user.posts}`)
                     user.save();
                     // REDIRECT TO THE NEW POST
                     res.redirect(`/posts/${post._id}`);
@@ -70,12 +67,12 @@ module.exports = (app) => {
             });
     });
     app.put("/posts/:id/vote-up", function(req, res) {
+        console.log('find id works')
         Post.findById(req.params.id).exec(function(err, post) {
-          post.upVotes.push(req.user._id);
-          post.voteScore = post.voteScore + 1;
-          post.save();
-      
-          res.status(200);
+            post.upVotes.push(req.user._id);          
+            post.voteScore = post.voteScore + 1;
+            post.save();
+            res.status(200);
         });
       });
       
