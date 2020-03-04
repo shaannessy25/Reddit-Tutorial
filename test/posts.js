@@ -23,8 +23,6 @@ describe('Posts', function () {
         url: 'https://www.google.com',
         summary: 'post summary',
         subreddit: 'test',
-
-
     };
     const user = {
         username: "poststest",
@@ -49,9 +47,9 @@ describe('Posts', function () {
         Post.estimatedDocumentCount()
             .then(function (initialDocCount) {
                 // chai
-                //     .request(app)
+                //.request(app)
                 agent
-                    .post("/post/new")
+                    .post("/posts/new")
                     // This line fakes a form post,
                     // since we're not actually filling out a form
                     .set("content-type", "application/x-www-form-urlencoded")

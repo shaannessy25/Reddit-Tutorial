@@ -19,7 +19,7 @@ const expressValidator = require('express-validator');
 app.use(expressValidator());
 
 app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+app.set('view engine', 'handlebars')
 
 
 
@@ -27,6 +27,7 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(express.static('public'));
 // Set db
 require('./data/reddit-db');
 
@@ -64,10 +65,10 @@ app.get("/posts/new", (req, res) => {
 require("./controllers/posts")(app);
 require('./controllers/comments.js')(app);
 require('./controllers/auth.js')(app);
-
+require('./controllers/replies.js')(app);
 // Start Server
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     console.log('Reddit listening on port localhost:3000!');
 });
 

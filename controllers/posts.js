@@ -9,17 +9,16 @@ module.exports = (app) => {
         if (req.user) {
             var post = new Post(req.body);
             post.author = req.user._id;
-
+            post.upVotes = [];
+            post.downVotes = [];
+            post.voteScore = 0;
             post
                 .save()
                 .then(post => {
-                    console.log(`The post: ${post}`)
                     return User.findById(post.author);
                 })
                 .then(user => {
-                    console.log(`The user: ${user}`)
                     user.posts.unshift(post);
-                    console.log(`The array: ${user.posts}`)
                     user.save();
                     // REDIRECT TO THE NEW POST
                     res.redirect(`/posts/${post._id}`);
@@ -35,7 +34,6 @@ module.exports = (app) => {
     // INDEX
     app.get('/', (req, res) => {
         const currentUser = req.user;
-        console.log(req.cookies);
         Post.find().populate('author')
             .then(posts => {
                 res.render('posts-index', { posts, currentUser });
@@ -49,10 +47,9 @@ module.exports = (app) => {
     app.get("/posts/:id", function(req, res) {
         const currentUser = req.user;
         // LOOK UP THE POST
-
-        Post.findById(req.params.id).populate({ path: 'comments', populate: { path: 'author' } }).populate('author')
+        Post.findById(req.params.id).populate('comments').lean()
             .then(post => {
-                res.render("posts-show", { post, currentUser });
+                res.render("post-show", { post, currentUser });
             })
             .catch(err => {
                 console.log(err.message);
@@ -61,12 +58,30 @@ module.exports = (app) => {
     // SUBREDDIT
     app.get("/n/:subreddit", function(req, res) {
         const currentUser = req.user;
-        Post.find({ subreddit: req.params.subreddit }).populate('author')
+        Post.find({ subreddit: req.params.subreddit }).lean()
             .then(posts => {
                 res.render("posts-index", { posts, currentUser });
             })
             .catch(err => {
                 console.log(err);
             });
+    });
+    app.put("/posts/:id/vote-up", function(req, res) {
+        console.log('find id works')
+        Post.findById(req.params.id).exec(function(err, post) {
+            post.upVotes.push(req.user._id);          
+            post.voteScore = post.voteScore + 1;
+            post.save();
+            res.status(200);
+        });
+      });
+      
+    app.put("/posts/:id/vote-down", function(req, res) {
+        Post.findById(req.params.id).exec(function(err, post) {
+            post.downVotes.push(req.user._id);
+            post.voteScore = post.voteScore - 1;
+            post.save();
+            res.status(200);
+        });
     });
 };

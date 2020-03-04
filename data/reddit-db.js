@@ -1,9 +1,12 @@
 /* Mongoose Connection */
 const mongoose = require("mongoose");
+require('dotenv').config();
 assert = require("assert");
 
 const url = "mongodb://localhost/reddit-db";
 mongoose.Promise = global.Promise;
+const mongo_uri = process.env.MONGODB_URI
+mongoose.connect(mongo_uri)
 mongoose.connect(
     url, { useNewUrlParser: true },
     function(err, db) {
